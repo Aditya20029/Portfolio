@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills - Aditya Velpula</title>
+  <meta name="description" content="Explore Aditya Velpula's skills in data analytics, machine learning, cloud (AWS), Python, SQL, R, and visualization with interactive dashboards and charts.">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      --primary-color: #2C3E50;
+      --secondary-color: #5D6D7E;
+      --accent-color: #16A085;
+      --success-color: #7FB069;
+      --warning-color: #F39C12;
+      --error-color: #E74C3C;
+      --bg-primary: #FDFEFE;
+      --bg-secondary: #F8F9FA;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ✅ Website background image */
+    body {
+      font-family: 'Inter', sans-serif;
+      background:
+        linear-gradient(135deg, rgba(253,254,254,0.96), rgba(248,249,250,0.96)),
+        url("./resources/site-bg.jpg") center/cover fixed no-repeat;
+      color: var(--primary-color);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ✅ Dark mode */
+    body.dark {
+      --primary-color: #e5e7eb;
+      --secondary-color: #94a3b8;
+      --bg-primary: #0f172a;
+      --bg-secondary: #020617;
+
+      background:
+        linear-gradient(135deg, rgba(15,23,42,0.96), rgba(2,6,23,0.96)),
+        url("./resources/site-bg.jpg") center/cover fixed no-repeat;
+    }
+
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Navigation */
+    .nav-blur {
+      backdrop-filter: blur(10px);
+      background: rgba(253, 254, 254, 0.9);
+      border-bottom: 1px solid rgba(44, 62, 80, 0.1);
+    }
+    body.dark .nav-blur {
+      background: rgba(2,6,23,0.80);
+      border-bottom: 1px solid rgba(148,163,184,0.15);
+    }
+
+    .nav-link { position: relative; transition: all 0.3s ease; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent-color);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after { width: 100%; }
+
+    /* Theme toggle */
+    .theme-toggle {
+      background: var(--accent-color);
+      border: none;
+      border-radius: 999px;
+      padding: 8px 14px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .theme-toggle:hover { transform: translateY(-1px); background: var(--success-color); }
+
+    /* Page Header */
+    .page-header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      opacity: 0.3;
+    }
+
+    /* Cards */
+    .skills-dashboard,
+    .skill-category,
+    .cert-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(22, 160, 133, 0.1);
+    }
+
+    body.dark .skills-dashboard,
+    body.dark .skill-category,
+    body.dark .cert-card {
+      background: rgba(15,23,42,0.85);
+      border-color: rgba(148,163,184,0.18);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .skills-dashboard { padding: 32px; margin-bottom: 32px; }
+    .chart-container { width: 100%; height: 400px; margin-bottom: 32px; }
+
+    .skill-category {
+      padding: 24px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .skill-category:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(22, 160, 133, 0.15); }
+    .skill-category.active { border-color: var(--accent-color); box-shadow: 0 8px 30px rgba(22, 160, 133, 0.2); }
+
+    .category-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .skill-bar {
+      background: rgba(22, 160, 133, 0.1);
+      border-radius: 10px;
+      height: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .skill-progress {
+      background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+      height: 100%;
+      border-radius: 10px;
+      transition: width 1s ease;
+      width: 0;
+    }
+
+    .skill-item { margin-bottom: 20px; }
+    .skill-name {
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .skill-percentage { color: var(--accent-color); font-weight: 800; white-space: nowrap; }
+
+    /* Certifications */
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+    }
+    .cert-card { padding: 24px; text-align: center; transition: all 0.3s ease; }
+    .cert-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(22, 160, 133, 0.15); }
+    .cert-badge {
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 28px;
+      background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+    }
+    .cert-title { font-size: 1.125rem; font-weight: 800; margin-bottom: 8px; color: var(--primary-color); }
+    .cert-issuer { color: var(--secondary-color); font-size: 0.95rem; margin-bottom: 0; }
+
+    /* Section background for coursework */
+    .soft-section { background: rgba(248,249,250,0.85); }
+    body.dark .soft-section { background: rgba(2,6,23,0.55); }
+
+    /* Animations */
+    .fade-in-up { opacity: 0; transform: translateY(30px); }
+    .stagger-item { opacity: 0; transform: translateY(20px); }
+
+    @media (max-width: 768px) {
+      .page-header { padding: 100px 0 60px; }
+      .skills-dashboard { padding: 20px; }
+      .chart-container { height: 300px; }
+      .cert-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 nav-blur">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <a href="index.html" class="text-2xl font-bold text-primary-color">Aditya Velpula</a>
+        </div>
+
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="index.html" class="nav-link text-primary-color hover:text-accent-color">Home</a>
+          <a href="projects.html" class="nav-link text-primary-color hover:text-accent-color">Projects</a>
+          <a href="skills.html" class="nav-link active text-primary-color hover:text-accent-color">Skills</a>
+          <a href="contact.html" class="nav-link text-primary-color hover:text-accent-color">Contact</a>
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle theme">🌙</button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden">
+          <button id="mobile-menu-btn" class="text-primary-color hover:text-accent-color">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+      <div class="px-2 pt-2 pb-3 space-y-1">
+        <a href="index.html" class="block px-3 py-2 text-primary-color hover:text-accent-color">Home</a>
+        <a href="projects.html" class="block px-3 py-2 text-primary-color hover:text-accent-color">Projects</a>
+        <a href="skills.html" class="block px-3 py-2 text-primary-color hover:text-accent-color">Skills</a>
+        <a href="contact.html" class="block px-3 py-2 text-primary-color hover:text-accent-color">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center fade-in-up">
+        <h1 class="text-5xl font-bold mb-6">Skills</h1>
+        <p class="text-xl max-w-3xl mx-auto opacity-90">
+          A clear overview of my analytics and data engineering toolkit — Python, SQL, R, AWS workflows,
+          machine learning, and data visualization.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Dashboard -->
+  <section class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="skills-dashboard fade-in-up">
+        <h2 class="text-3xl font-bold mb-6 text-center">Skills Overview</h2>
+        <div id="skills-radar" class="chart-container"></div>
+
+        <div class="grid md:grid-cols-4 gap-6 mb-8">
+          <div class="skill-category active" data-category="dataeng">
+            <div class="category-icon">🧱</div>
+            <h3 class="text-xl font-semibold mb-2">Data Engineering</h3>
+            <p class="text-secondary-color">ETL, SQL, Data Cleaning</p>
+          </div>
+
+          <div class="skill-category" data-category="analytics">
+            <div class="category-icon">📊</div>
+            <h3 class="text-xl font-semibold mb-2">Analytics & BI</h3>
+            <p class="text-secondary-color">Stats, Dashboards, Insights</p>
+          </div>
+
+          <div class="skill-category" data-category="ml">
+            <div class="category-icon">🤖</div>
+            <h3 class="text-xl font-semibold mb-2">Machine Learning</h3>
+            <p class="text-secondary-color">RF, XGBoost, Evaluation</p>
+          </div>
+
+          <div class="skill-category" data-category="cloud">
+            <div class="category-icon">☁️</div>
+            <h3 class="text-xl font-semibold mb-2">Cloud & Tools</h3>
+            <p class="text-secondary-color">AWS, Git, Notebooks</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3 justify-center">
+          <a href="https://www.linkedin.com/in/aditya293/" target="_blank" rel="noopener noreferrer"
+             class="px-4 py-2 rounded-full border border-gray-200 font-semibold hover:shadow"
+             style="color: var(--primary-color); background: rgba(255,255,255,0.7);">💼 LinkedIn</a>
+
+          <a href="https://github.com/Aditya20029" target="_blank" rel="noopener noreferrer"
+             class="px-4 py-2 rounded-full border border-gray-200 font-semibold hover:shadow"
+             style="color: var(--primary-color); background: rgba(255,255,255,0.7);">🐙 GitHub</a>
+
+          <a href="Resume Aditya Velpula.pdf" download
+             class="px-4 py-2 rounded-full border border-gray-200 font-semibold hover:shadow"
+             style="color: var(--primary-color); background: rgba(255,255,255,0.7);">📄 Resume</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Detailed Skills -->
+  <section class="pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-8">
+
+        <!-- Data Engineering -->
+        <div class="skill-category active" id="dataeng-skills">
+          <h3 class="text-2xl font-bold mb-6">Data Engineering</h3>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>SQL (joins, aggregation, window logic)</span>
+              <span class="skill-percentage">90%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="90"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Data Cleaning / Preparation</span>
+              <span class="skill-percentage">88%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="88"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>ETL/ELT Workflows (batch analytics)</span>
+              <span class="skill-percentage">85%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="85"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>MySQL / Relational Modeling</span>
+              <span class="skill-percentage">82%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="82"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Reproducible Analysis (notebooks)</span>
+              <span class="skill-percentage">86%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="86"></div></div>
+          </div>
+        </div>
+
+        <!-- Analytics & BI -->
+        <div class="skill-category" id="analytics-skills" style="display: none;">
+          <h3 class="text-2xl font-bold mb-6">Analytics & BI</h3>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Python (pandas, visualization)</span>
+              <span class="skill-percentage">90%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="90"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>R (ggplot2, analysis)</span>
+              <span class="skill-percentage">82%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="82"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Statistics (hypothesis testing, trends)</span>
+              <span class="skill-percentage">80%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="80"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Dashboards (Power BI / reporting)</span>
+              <span class="skill-percentage">78%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="78"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Storytelling (insights & recommendations)</span>
+              <span class="skill-percentage">84%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="84"></div></div>
+          </div>
+        </div>
+
+        <!-- Machine Learning -->
+        <div class="skill-category" id="ml-skills" style="display: none;">
+          <h3 class="text-2xl font-bold mb-6">Machine Learning</h3>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Modeling (Regression / Classification)</span>
+              <span class="skill-percentage">84%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="84"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Random Forest / XGBoost</span>
+              <span class="skill-percentage">82%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="82"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Feature Engineering</span>
+              <span class="skill-percentage">80%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="80"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Evaluation (AUC-ROC, precision/recall)</span>
+              <span class="skill-percentage">83%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="83"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>NLP Basics (sentiment / text features)</span>
+              <span class="skill-percentage">74%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="74"></div></div>
+          </div>
+        </div>
+
+        <!-- Cloud & Tools -->
+        <div class="skill-category" id="cloud-skills" style="display: none;">
+          <h3 class="text-2xl font-bold mb-6">Cloud & Tools</h3>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>AWS (S3, RDS, Glue DataBrew)</span>
+              <span class="skill-percentage">80%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="80"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Git / GitHub</span>
+              <span class="skill-percentage">86%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="86"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Jupyter / Colab / RStudio</span>
+              <span class="skill-percentage">88%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="88"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Data Visualization Libraries</span>
+              <span class="skill-percentage">82%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="82"></div></div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">
+              <span>Documentation & Communication</span>
+              <span class="skill-percentage">85%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-progress" data-width="85"></div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Certifications / Learning -->
+  <section class="py-12 soft-section">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12 fade-in-up">
+        <h2 class="text-4xl font-bold mb-6">Learning & Coursework</h2>
+        <p class="text-xl text-secondary-color max-w-3xl mx-auto">
+          Coursework and hands-on labs that back my practical skills (analytics, cloud workflows, and modeling).
+        </p>
+      </div>
+
+      <div class="cert-grid">
+        <div class="cert-card stagger-item">
+          <div class="cert-badge">☁️</div>
+          <h3 class="cert-title">AWS Academy Labs</h3>
+          <p class="cert-issuer">S3, RDS, Glue DataBrew (Learner Lab)</p>
+        </div>
+
+        <div class="cert-card stagger-item">
+          <div class="cert-badge">🧮</div>
+          <h3 class="cert-title">Statistics & Research Methods</h3>
+          <p class="cert-issuer">Hypothesis testing, survey design, interpretation</p>
+        </div>
+
+        <div class="cert-card stagger-item">
+          <div class="cert-badge">📊</div>
+          <h3 class="cert-title">Data Visualization</h3>
+          <p class="cert-issuer">Dashboards & storytelling (Power BI / plots)</p>
+        </div>
+
+        <div class="cert-card stagger-item">
+          <div class="cert-badge">🤖</div>
+          <h3 class="cert-title">Machine Learning Projects</h3>
+          <p class="cert-issuer">Regression, Random Forest, XGBoost, evaluation</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <div class="mb-6">
+          <span class="text-2xl font-bold">Aditya Velpula</span>
+        </div>
+        <p class="text-gray-400 mb-6">Data Analytics • Machine Learning • AWS • Python • SQL • R</p>
+        <div class="flex justify-center space-x-6 mb-6">
+          <a href="https://www.linkedin.com/in/aditya293/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors">LinkedIn</a>
+          <a href="https://github.com/Aditya20029" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors">GitHub</a>
+        </div>
+        <p class="text-gray-500 text-sm">© 2025 Aditya Velpula. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileBtn && mobileMenu) mobileBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+    // Theme helpers
+    function applyThemeFromStorage() {
+      const saved = localStorage.getItem('theme') || 'light';
+      const btn = document.getElementById('theme-toggle');
+      if (saved === 'dark') {
+        document.body.classList.add('dark');
+        if (btn) btn.textContent = '☀️';
+      } else {
+        document.body.classList.remove('dark');
+        if (btn) btn.textContent = '🌙';
+      }
+    }
+    function toggleTheme() {
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      applyThemeFromStorage();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyThemeFromStorage();
+      const themeBtn = document.getElementById('theme-toggle');
+      if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+    });
+
+    // Category switching
+    const categoryCards = document.querySelectorAll('.skill-category[data-category]');
+    const panels = {
+      dataeng: document.getElementById('dataeng-skills'),
+      analytics: document.getElementById('analytics-skills'),
+      ml: document.getElementById('ml-skills'),
+      cloud: document.getElementById('cloud-skills'),
+    };
+
+    function resetProgressBars(container) {
+      const bars = container.querySelectorAll('.skill-progress');
+      bars.forEach(bar => bar.style.width = '0%');
+      setTimeout(() => {
+        bars.forEach(bar => {
+          const w = bar.getAttribute('data-width') || '0';
+          bar.style.width = `${w}%`;
+        });
+      }, 60);
+    }
+
+    function showPanel(key) {
+      Object.keys(panels).forEach(k => {
+        panels[k].style.display = (k === key) ? 'block' : 'none';
+      });
+      resetProgressBars(panels[key]);
+    }
+
+    categoryCards.forEach(card => {
+      card.addEventListener('click', () => {
+        categoryCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        const key = card.getAttribute('data-category');
+        showPanel(key);
+      });
+    });
+
+    // Initial
+    showPanel('dataeng');
+
+    // Fade-in animation
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.fade-in-up').forEach(el => {
+        el.style.opacity = 1;
+        el.style.transform = 'translateY(0)';
+        el.style.transition = 'all 700ms ease';
+      });
+      document.querySelectorAll('.stagger-item').forEach((el, i) => {
+        setTimeout(() => {
+          el.style.opacity = 1;
+          el.style.transform = 'translateY(0)';
+          el.style.transition = 'all 650ms ease';
+        }, 120 + i * 90);
+      });
+    });
+
+    // Radar chart (adapts for dark mode)
+    const radarEl = document.getElementById('skills-radar');
+    let chart;
+
+    function renderRadar() {
+      if (!radarEl) return;
+      if (!chart) chart = echarts.init(radarEl);
+
+      const isDark = document.body.classList.contains('dark');
+      const axisColor = isDark ? 'rgba(148,163,184,0.35)' : 'rgba(93,109,126,0.25)';
+      const splitArea = isDark
+        ? ['rgba(22,160,133,0.06)', 'rgba(22,160,133,0.03)']
+        : ['rgba(22,160,133,0.03)', 'rgba(22,160,133,0.01)'];
+
+      chart.setOption({
+        tooltip: { trigger: 'item' },
+        radar: {
+          indicator: [
+            { name: 'Python', max: 100 },
+            { name: 'SQL', max: 100 },
+            { name: 'R', max: 100 },
+            { name: 'AWS', max: 100 },
+            { name: 'ML', max: 100 },
+            { name: 'Visualization', max: 100 }
+          ],
+          splitLine: { lineStyle: { color: axisColor } },
+          splitArea: { areaStyle: { color: splitArea } },
+          axisLine: { lineStyle: { color: axisColor } },
+          axisName: { color: isDark ? '#e5e7eb' : '#2C3E50' }
+        },
+        series: [{
+          type: 'radar',
+          data: [{ value: [90, 90, 82, 80, 84, 78], name: 'Skill Strength' }],
+          areaStyle: { opacity: 0.2 }
+        }]
+      }, true);
+
+      chart.resize();
+    }
+
+    window.addEventListener('resize', () => chart && chart.resize());
+    document.addEventListener('DOMContentLoaded', () => renderRadar());
+
+    // Re-render chart when theme toggles
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) themeBtn.addEventListener('click', () => setTimeout(renderRadar, 80));
+  </script>
+</body>
+</html>
